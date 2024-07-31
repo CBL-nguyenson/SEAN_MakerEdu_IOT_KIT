@@ -2,12 +2,16 @@
 
 Makerlabvn_I2C_Motor_Driver::Makerlabvn_I2C_Motor_Driver(uint8_t _address_)
 {
-  if(_address_ <= MAKERLABVN_I2C_DRIVER_MAX_NUMBER_DRIVER_SUPPORT){
+  if (_address_ <= MAKERLABVN_I2C_DRIVER_MAX_NUMBER_DRIVER_SUPPORT)
+  {
     addressDriver = _address_ + MAKERLABVN_I2C_DRIVER_SLAVE_ADDRESS_MIN;
-  }else if((_address_ >= MAKERLABVN_I2C_DRIVER_SLAVE_ADDRESS_MIN) && (_address_ <= MAKERLABVN_I2C_DRIVER_SLAVE_ADDRESS_MAX)){
+  }
+  else if ((_address_ >= MAKERLABVN_I2C_DRIVER_SLAVE_ADDRESS_MIN) && (_address_ <= MAKERLABVN_I2C_DRIVER_SLAVE_ADDRESS_MAX))
+  {
     addressDriver = _address_;
-  }else
-  addressDriver = MAKERLABVN_I2C_DRIVER_SLAVE_ADDRESS_MIN;
+  }
+  else
+    addressDriver = MAKERLABVN_I2C_DRIVER_SLAVE_ADDRESS_MIN;
 }
 
 void Makerlabvn_I2C_Motor_Driver::begin()
@@ -15,8 +19,8 @@ void Makerlabvn_I2C_Motor_Driver::begin()
   Wire.begin(); // join i2c bus (address optional for master)
   motorI2C_init();
   ReadI2cOverSerial();
-  this->MB(0,0);
-  this->MA(0,0);
+  this->MB(0, 0);
+  this->MA(0, 0);
   this->freeS2();
   this->freeS1();
 }
@@ -71,12 +75,17 @@ I2C_Driver_Error_Code Makerlabvn_I2C_Motor_Driver::setAddress(uint8_t _address_)
   {
     str_serial_data_dcMotor *_myMotor_ = &motorDC[0];
     _myMotor_->modeId = SADDR_ID;
-    if(_address_ <= MAKERLABVN_I2C_DRIVER_MAX_NUMBER_DRIVER_SUPPORT){
+    if (_address_ <= MAKERLABVN_I2C_DRIVER_MAX_NUMBER_DRIVER_SUPPORT)
+    {
       _myMotor_->addressId = _address_ + MAKERLABVN_I2C_DRIVER_SLAVE_ADDRESS_MIN;
-    }else if((_address_ >= MAKERLABVN_I2C_DRIVER_SLAVE_ADDRESS_MIN) && (_address_ <= MAKERLABVN_I2C_DRIVER_SLAVE_ADDRESS_MAX)){
+    }
+    else if ((_address_ >= MAKERLABVN_I2C_DRIVER_SLAVE_ADDRESS_MIN) && (_address_ <= MAKERLABVN_I2C_DRIVER_SLAVE_ADDRESS_MAX))
+    {
       _myMotor_->addressId = _address_;
-    }else return I2C_MOTOR_DRIVER_CODE_INVALID_ADDRESS;
-    
+    }
+    else
+      return I2C_MOTOR_DRIVER_CODE_INVALID_ADDRESS;
+
     checkSumCalculate(_myMotor_);
     sendI2cAddress_Data(addressDriver, _myMotor_);
     delayMicroseconds(DELAY_I2C_SEND);
@@ -188,15 +197,15 @@ void Makerlabvn_I2C_Motor_Driver::MB(bool _dir_, uint8_t _PWMspeed_)
 
 void Makerlabvn_I2C_Motor_Driver::writeMA(bool _dir_, uint8_t _PercentSpeed_)
 {
-  uint8_t tempPercentSpeed = constrain(_PercentSpeed_,0,100);
-  uint8_t tempPwm = map(tempPercentSpeed,0,100,0,255);
+  uint8_t tempPercentSpeed = constrain(_PercentSpeed_, 0, 100);
+  uint8_t tempPwm = map(tempPercentSpeed, 0, 100, 0, 255);
   Makerlabvn_I2C_Motor_Driver::MA(_dir_, tempPwm);
 }
 
 void Makerlabvn_I2C_Motor_Driver::writeMB(bool _dir_, uint8_t _PercentSpeed_)
 {
-  uint8_t tempPercentSpeed = constrain(_PercentSpeed_,0,100);
-  uint8_t tempPwm = map(tempPercentSpeed,0,100,0,255);
+  uint8_t tempPercentSpeed = constrain(_PercentSpeed_, 0, 100);
+  uint8_t tempPwm = map(tempPercentSpeed, 0, 100, 0, 255);
   Makerlabvn_I2C_Motor_Driver::MB(_dir_, tempPwm);
 }
 
@@ -224,10 +233,12 @@ void Makerlabvn_I2C_Motor_Driver::writeS2(uint16_t _degree_)
   Makerlabvn_I2C_Motor_Driver::S2(tempPulse);
 }
 
-void Makerlabvn_I2C_Motor_Driver::freeS1(){
+void Makerlabvn_I2C_Motor_Driver::freeS1()
+{
   Makerlabvn_I2C_Motor_Driver::S1(I2C_MOTOR_DRIVER_PULSE_DISABLE);
 }
 
-void Makerlabvn_I2C_Motor_Driver::freeS2(){
+void Makerlabvn_I2C_Motor_Driver::freeS2()
+{
   Makerlabvn_I2C_Motor_Driver::S2(I2C_MOTOR_DRIVER_PULSE_DISABLE);
 }
